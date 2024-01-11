@@ -1,11 +1,14 @@
 {
+  "scripts": {
+    "start": "node server.js"
+  },
   "name": "note-taker",
-  "version": "1.0.0",
   "description": "",
+  "version": "1.0.0",
   "main": "server.js",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.17.1"
   }
 }
