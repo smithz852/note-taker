@@ -26,7 +26,6 @@ app.get('/api/notes', (req, res) => {
   });
 
   app.post('/api/notes', (req, res) => {
-    console.info(`${req.method} request received to add a review`);
   console.log(req.body);
     const {title, text} = req.body;
     
@@ -35,12 +34,16 @@ app.get('/api/notes', (req, res) => {
       const newNote = {
         title,
         text,
-        review_id: uuid(),
+        id: uuid(),
       };
   
       const reviewString = JSON.stringify(newNote);
-  
-      fs.writeFile(`./Develop/db/db.json`, reviewString, (err) =>
+      fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
+        // console.log(data)
+        let oldNotes = JSON.parse(data);
+        oldNotes.push(newNote)
+       
+      fs.writeFile(`./Develop/db/db.json`, JSON.stringify(oldNotes), (err) =>
         err
           ? console.error(err)
           : console.log(
@@ -50,15 +53,16 @@ app.get('/api/notes', (req, res) => {
   
       const response = {
         status: 'success',
-        body: newReview,
+        body: oldNotes,
       };
   
       console.log(response);
       res.status(201).json(response);
+    })
     } else {
       res.status(500).json('Error in posting review');
     }
-  });
+  })
   
   app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT}`)
