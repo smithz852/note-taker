@@ -7,30 +7,40 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('./Develop/public'));
+
 
 app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/Develop/public/index.html'))
 );
 
+app.get('/notes', (req, res) =>
+  res.sendFile(path.join(__dirname, '/Develop/public/notes.html'))
+);
+
 app.get('/api/notes', (req, res) => {
-    res.json(`${req.method} request received to get reviews`);
-    console.info(`${req.method} request received to get reviews`);
+   fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
+    // console.log(data)
+    res.json(JSON.parse(data));
+   })
   });
 
   app.post('/api/notes', (req, res) => {
     console.info(`${req.method} request received to add a review`);
+  console.log(req.body);
+    const {title, text} = req.body;
+    
   
-    const note = req.body;
-  
-    if (note) {
+    if (title && text) {
       const newNote = {
-        note,
+        title,
+        text,
         review_id: uuid(),
       };
   
       const reviewString = JSON.stringify(newNote);
   
-      fs.writeFile(`./db/db.json`, reviewString, (err) =>
+      fs.writeFile(`./Develop/db/db.json`, reviewString, (err) =>
         err
           ? console.error(err)
           : console.log(
