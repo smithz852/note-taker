@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node server.js"
+    "start": "npm run start"
   },
   "name": "note-taker",
   "description": "",
